@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+import glob
+
+#Create a list of all the file names in a folder
+path ='C:/Users/Files/Remittance'
+filenames = glob.glob(path + "/*.csv")
+
+#Import each CSV file as a dataframe by calling the list of file names
+#Add a column to each new dataframe with the value being pulled from the filename
+#Note the upse of Latin1 encoding - this is due to a quirk of the files provided and UTF-8 is preferred
+#Add dataframe to list of dataframes
+
+dfs = []
+for filename in filenames:
+
+     filename_df = pd.read_csv(filename,encoding='latin1',names=['InvoiceNum','InvoiceDate','ShipDate','PO','Business','Order','Amount'])
+     filename_df['voucher'] = re.split('[\W+]', filename)[13][:7] * filename_df.shape[0]
+     dfs.append(filename_df)
+
+#Concatenate all dataframe in list into one dataframe
+
+big_frame = pd.concat(dfs, ignore_index=True)
+
+#Export new large dataframe to CSV
+
+path =r'C:\Users\bwebe\Downloads'
+big_frame.to_csv(r'C:/Users/Files/Remittance',encoding = 'utf-8')
